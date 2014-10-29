@@ -100,7 +100,9 @@
             }
 
             //复制插件进临时文件夹。
-            foreach (var plugin in PluginFolder.GetFiles("*.dll", SearchOption.AllDirectories))
+            var plugins = PluginFolder.GetFiles("*.dll", SearchOption.AllDirectories).Where(p => p.Name.StartsWith("Plugin."));
+            //var plugins = PluginFolder.GetFiles("*.dll", SearchOption.AllDirectories);
+            foreach (var plugin in plugins)
             {
                 try
                 {

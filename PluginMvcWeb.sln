@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginMvc.Framework", "Plug
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{932AD160-229D-4085-AA5F-A1B2ADC44468}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginMvc.Contents", "PluginMvcWeb\Plugins\Contents\PluginMvc.Contents.csproj", "{353D623C-2F8D-4891-AC38-D3310C5F52DF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin.Contents", "PluginMvcWeb\Plugins\Contents\Plugin.Contents.csproj", "{353D623C-2F8D-4891-AC38-D3310C5F52DF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

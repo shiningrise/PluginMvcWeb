@@ -1,4 +1,4 @@
-﻿namespace PluginMvc.Contents
+﻿namespace Plugin.Contents
 {
     using System.Web;
 

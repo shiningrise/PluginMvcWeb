@@ -1,4 +1,4 @@
-﻿namespace PluginMvc.Contents
+﻿namespace Plugin.Contents
 {
     using System.Web.Mvc;
     using System.Web.Routing;
@@ -24,15 +24,15 @@
             //);
 
             RouteTable.Routes.MapRoute(
-                name: "content",
-                url: "content/{controller}/{action}/{id}",
+                name: "Plugin.Contents",
+                url: "Contents/{controller}/{action}/{id}",
                 defaults: new { controller = "Content", action = "Index", id = UrlParameter.Optional, pluginName = this.Name }
             );
         }
 
         public void Unload()
         {
-            RouteTable.Routes.Remove(RouteTable.Routes["content"]);
+            RouteTable.Routes.Remove(RouteTable.Routes["Plugin.Contents"]);
         }
     }
 }

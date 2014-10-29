@@ -1,4 +1,4 @@
-﻿namespace PluginMvc.Contents.Models
+﻿namespace Plugin.Contents.Models
 {
     public class ContentItem
     {

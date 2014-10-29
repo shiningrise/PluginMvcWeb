@@ -23,7 +23,8 @@
         public static void Initialize()
         {
             //遍历所有插件描述。
-            foreach (var plugin in PluginLoader.Load())
+            var plugins = PluginLoader.Load();
+            foreach (var plugin in plugins)
             {
                 //卸载插件。
                 Unload(plugin);
