@@ -8,7 +8,6 @@
 
 <h2>@Model.Title</h2>
 
-2
 
 copy /Y "$(TargetDir)$(ProjectName).dll" "$(SolutionDir)PluginMvcWeb\Bin\"
 
@@ -32,7 +31,19 @@ copy /Y "$(TargetDir)$(ProjectName).dll" "$(SolutionDir)PluginMvcWeb\Bin\"
 <br />
 // 获取和设置包括该应用程序的目录的名称。
 <br />
-System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase
+System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase:
 <br />
 @System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase
 <br />
+System.AppDomain.CurrentDomain.SetupInformation.PrivateBinPath:
+<br />
+@System.AppDomain.CurrentDomain.SetupInformation.PrivateBinPath
+<br />
+System.AppDomain.CurrentDomain.SetupInformation.ShadowCopyDirectories :
+<br />
+@System.AppDomain.CurrentDomain.SetupInformation.ShadowCopyDirectories
+
+<br />
+System.AppDomain.CurrentDomain.DynamicDirectory :
+<br />
+@System.AppDomain.CurrentDomain.DynamicDirectory

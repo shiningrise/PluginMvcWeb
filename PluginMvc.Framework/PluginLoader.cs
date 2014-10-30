@@ -23,33 +23,19 @@
         /// </summary>
         private static readonly DirectoryInfo TempPluginFolder;
 
-        private static readonly string PluginPrefix;
+        private static readonly List<string> FrameworkPrivateBinFiles;
 
         /// <summary>
         /// 初始化。
         /// </summary>
         static PluginLoader()
         {
-            PluginPrefix = "Plugin.";
             PluginFolder = new DirectoryInfo(HostingEnvironment.MapPath("~/Plugins"));
             TempPluginFolder = new DirectoryInfo(AppDomain.CurrentDomain.DynamicDirectory);
             //new DirectoryInfo(HostingEnvironment.MapPath("~/App_Data/Dependencies"));
-            //AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-        }
-
-        /// <summary>
-        /// 对外解析dll失败时调用
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        static System.Reflection.Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
-        {
-            string path = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"App_Data/Dependencies");
-            path = System.IO.Path.Combine(path, args.Name.Split(',')[0]);
-            path = String.Format(@"{0}.dll", path);
-            Debug.Write(path);
-            return System.Reflection.Assembly.LoadFrom(path);
+            //System.AppDomain.CurrentDomain.BaseDirectory 
+            var FrameworkPrivateBin = new DirectoryInfo(System.AppDomain.CurrentDomain.SetupInformation.PrivateBinPath);
+            FrameworkPrivateBinFiles = FrameworkPrivateBin.GetFiles().Select(p => p.Name).ToList();
         }
 
         /// <summary>
@@ -60,7 +46,7 @@
             List<PluginDescriptor> plugins = new List<PluginDescriptor>();
 
             //程序集复制到临时目录。
-            FileCopyTo();
+            CopyToDynamicDirectory();
 
             IEnumerable<Assembly> assemblies = null;
 
@@ -101,17 +87,25 @@
         /// <summary>
         /// 程序集复制到临时目录。
         /// </summary>
-        private static void FileCopyTo()
+        private static void CopyToDynamicDirectory()
         {
             Directory.CreateDirectory(PluginFolder.FullName);
             Directory.CreateDirectory(TempPluginFolder.FullName);
 
+            Debug.WriteLine("\r\nFrameworkPrivateBinFiles:");
+            foreach (var item in FrameworkPrivateBinFiles)
+            {
+                Debug.WriteLine(item);
+            }
+
             //清理临时文件。
-            var pluginsTemp = TempPluginFolder.GetFiles("*.dll", SearchOption.AllDirectories).Where(p => p.Name.StartsWith(PluginPrefix));
+            Debug.WriteLine("清理临时文件");
+            var pluginsTemp = TempPluginFolder.GetFiles("*.dll", SearchOption.AllDirectories).Where(p => FrameworkPrivateBinFiles.Contains(p.Name) == false);
             foreach (var file in pluginsTemp)
             {
                 try
                 {
+                    Debug.WriteLine(file.FullName);
                     file.Delete();
                 }
                 catch (Exception)
@@ -122,14 +116,19 @@
             }
 
             //复制插件进临时文件夹。
-            var plugins = PluginFolder.GetFiles("*.dll", SearchOption.AllDirectories).Where(p => p.Name.StartsWith(PluginPrefix));
+            Debug.WriteLine("复制插件进临时文件夹");
+            var plugins = PluginFolder.GetFiles("*.dll", SearchOption.AllDirectories).Where(p => FrameworkPrivateBinFiles.Contains(p.Name) == false);
             //var plugins = PluginFolder.GetFiles("*.dll", SearchOption.AllDirectories);
             foreach (var plugin in plugins)
             {
                 try
                 {
                     var di = Directory.CreateDirectory(TempPluginFolder.FullName);
-                    File.Copy(plugin.FullName, Path.Combine(di.FullName, plugin.Name), true);
+                    var srcPath = plugin.FullName;
+                    var toPath = Path.Combine(di.FullName, plugin.Name);
+                    Debug.WriteLine(string.Format("from:\t{0}", srcPath));
+                    Debug.WriteLine(string.Format("to:\t{0}", toPath));
+                    File.Copy(srcPath,toPath,true);
                 }
                 catch (Exception)
                 {
