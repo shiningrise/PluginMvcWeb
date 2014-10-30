@@ -16,6 +16,16 @@
         /// </summary>
         protected void Application_Start()
         {
+            var logfile = string.Format("{0}App_Data\\{1:yyMMdd}.log", System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase, DateTime.Now);
+#if DEBUG
+            logfile = string.Format("{0}App_Data\\{1:yyMMddhhmmss}.log", System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase, DateTime.Now);
+#endif
+            var traceListener = new TextWriterTraceListener(logfile);
+            Debug.Listeners.Add(traceListener);
+
+            //Debug.WriteLine(logfile);
+            //Trace.WriteLine(logfile);
+
             RouteCollection routes = RouteTable.Routes;
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
