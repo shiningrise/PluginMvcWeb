@@ -92,11 +92,13 @@
             Directory.CreateDirectory(PluginFolder.FullName);
             Directory.CreateDirectory(TempPluginFolder.FullName);
 
+            #if DEBUG 
             Debug.WriteLine("\r\nFrameworkPrivateBinFiles:");
             foreach (var item in FrameworkPrivateBinFiles)
             {
                 Debug.WriteLine(item);
             }
+            #endif
 
             //清理临时文件。
             Debug.WriteLine("清理临时文件");
@@ -116,7 +118,9 @@
             }
 
             //复制插件进临时文件夹。
+            #if DEBUG 
             Debug.WriteLine("复制插件进临时文件夹");
+            #endif
             var plugins = PluginFolder.GetFiles("*.dll", SearchOption.AllDirectories).Where(p => FrameworkPrivateBinFiles.Contains(p.Name) == false);
             //var plugins = PluginFolder.GetFiles("*.dll", SearchOption.AllDirectories);
             foreach (var plugin in plugins)
@@ -126,8 +130,10 @@
                     var di = Directory.CreateDirectory(TempPluginFolder.FullName);
                     var srcPath = plugin.FullName;
                     var toPath = Path.Combine(di.FullName, plugin.Name);
+                    #if DEBUG 
                     Debug.WriteLine(string.Format("from:\t{0}", srcPath));
                     Debug.WriteLine(string.Format("to:\t{0}", toPath));
+                    #endif  
                     File.Copy(srcPath,toPath,true);
                 }
                 catch (Exception)
