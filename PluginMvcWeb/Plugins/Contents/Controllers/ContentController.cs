@@ -3,6 +3,7 @@
     using System.Web.Mvc;
 
     using Plugin.Contents.Models;
+    using System;
 
     /// <summary>
     /// 内容控制器。
@@ -11,7 +12,7 @@
     {
         public ActionResult List()
         {
-            ContentItem contentItem = new ContentItem { Id = 1, Title = "cccccccccccc_list 111。" };
+            ContentItem contentItem = new ContentItem { Id = 1, Title = "cccccccccccc_list 111。" + AppDomain.CurrentDomain.DynamicDirectory };
 
             return View(contentItem);
         }

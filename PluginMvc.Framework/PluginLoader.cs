@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -28,7 +29,24 @@
         static PluginLoader()
         {
             PluginFolder = new DirectoryInfo(HostingEnvironment.MapPath("~/Plugins"));
-            TempPluginFolder = new DirectoryInfo(HostingEnvironment.MapPath("~/App_Data/Dependencies"));
+            TempPluginFolder = new DirectoryInfo(AppDomain.CurrentDomain.DynamicDirectory);
+            //new DirectoryInfo(HostingEnvironment.MapPath("~/App_Data/Dependencies"));
+            //AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+        }
+
+        /// <summary>
+        /// 对外解析dll失败时调用
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        static System.Reflection.Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            string path = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"App_Data/Dependencies");
+            path = System.IO.Path.Combine(path, args.Name.Split(',')[0]);
+            path = String.Format(@"{0}.dll", path);
+            Debug.Write(path);
+            return System.Reflection.Assembly.LoadFrom(path);
         }
 
         /// <summary>
