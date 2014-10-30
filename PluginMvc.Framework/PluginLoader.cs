@@ -23,11 +23,14 @@
         /// </summary>
         private static readonly DirectoryInfo TempPluginFolder;
 
+        private static readonly string PluginPrefix;
+
         /// <summary>
         /// 初始化。
         /// </summary>
         static PluginLoader()
         {
+            PluginPrefix = "Plugin.";
             PluginFolder = new DirectoryInfo(HostingEnvironment.MapPath("~/Plugins"));
             TempPluginFolder = new DirectoryInfo(AppDomain.CurrentDomain.DynamicDirectory);
             //new DirectoryInfo(HostingEnvironment.MapPath("~/App_Data/Dependencies"));
@@ -104,7 +107,8 @@
             Directory.CreateDirectory(TempPluginFolder.FullName);
 
             //清理临时文件。
-            foreach (var file in TempPluginFolder.GetFiles("*.dll", SearchOption.AllDirectories))
+            var pluginsTemp = TempPluginFolder.GetFiles("*.dll", SearchOption.AllDirectories).Where(p => p.Name.StartsWith(PluginPrefix));
+            foreach (var file in pluginsTemp)
             {
                 try
                 {
@@ -118,7 +122,7 @@
             }
 
             //复制插件进临时文件夹。
-            var plugins = PluginFolder.GetFiles("*.dll", SearchOption.AllDirectories).Where(p => p.Name.StartsWith("Plugin."));
+            var plugins = PluginFolder.GetFiles("*.dll", SearchOption.AllDirectories).Where(p => p.Name.StartsWith(PluginPrefix));
             //var plugins = PluginFolder.GetFiles("*.dll", SearchOption.AllDirectories);
             foreach (var plugin in plugins)
             {
