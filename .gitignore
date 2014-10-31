@@ -29,4 +29,5 @@ _ReSharper*/
 
 packages/*
 !packages/repositories.config
+!PluginMvc.Framework/NuGet.exe
 PluginMvcWeb/App_Data/*
