@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>PluginMvcWeb</authors>
+    <owners>PluginMvcWeb</owners>
+    <projectUrl>https://github.com/shiningrise/PluginMvcWeb</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>PluginMvcWeb</description>
+    <releaseNotes>PluginMvcWeb.</releaseNotes>
+    <copyright>Copyright 2014</copyright>
+    <tags>Pluginable Mvc</tags>
+  </metadata>
+</package>

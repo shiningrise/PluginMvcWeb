@@ -1,0 +1,1 @@
+NuGet.exe pack PluginMvc.Framework.csproj -Prop Configuration=Release
