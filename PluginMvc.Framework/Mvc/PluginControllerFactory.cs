@@ -17,7 +17,14 @@
         /// <returns>控制器类型。</returns>
         protected override Type GetControllerType(RequestContext requestContext, string controllerName)
         {
-            Type controllerType = this.GetControllerType(controllerName);
+            string pluginName = string.Empty;
+            Type controllerType = null;
+
+            if (requestContext.RouteData.Values.ContainsKey("pluginName"))
+            {
+                pluginName = requestContext.RouteData.GetRequiredString("pluginName");
+                controllerType = this.GetControllerType(pluginName,controllerName);
+            }
 
             if (controllerType == null)
             {
@@ -32,16 +39,13 @@
         /// </summary>
         /// <param name="controllerName">控制器名称。</param>
         /// <returns>控制器类型。</returns>
-        private Type GetControllerType(string controllerName)
+        private Type GetControllerType(string pluginName,string controllerName)
         {
-            foreach (var plugin in PluginManager.GetPlugins())
+            var plugin = PluginManager.GetPlugin(pluginName);
+            var type = plugin.GetControllerType(controllerName + "Controller");
+            if (type != null)
             {
-                var type = plugin.GetControllerType(controllerName + "Controller");
-
-                if (type != null)
-                {
-                    return type;
-                }
+                return type;
             }
 
             return null;
