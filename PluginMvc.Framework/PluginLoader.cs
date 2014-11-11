@@ -31,8 +31,8 @@
         static PluginLoader()
         {
             PluginFolder = new DirectoryInfo(HostingEnvironment.MapPath("~/Plugins"));
-            TempPluginFolder = new DirectoryInfo(AppDomain.CurrentDomain.DynamicDirectory);
-            //new DirectoryInfo(HostingEnvironment.MapPath("~/App_Data/Dependencies"));
+            TempPluginFolder = //new DirectoryInfo(AppDomain.CurrentDomain.DynamicDirectory);
+            new DirectoryInfo(HostingEnvironment.MapPath("~/App_Data/Dependencies"));
             //System.AppDomain.CurrentDomain.BaseDirectory 
             var FrameworkPrivateBin = new DirectoryInfo(System.AppDomain.CurrentDomain.SetupInformation.PrivateBinPath);
             FrameworkPrivateBinFiles = FrameworkPrivateBin.GetFiles().Select(p => p.Name).ToList();
@@ -46,7 +46,7 @@
             List<PluginDescriptor> plugins = new List<PluginDescriptor>();
 
             //程序集复制到临时目录。
-            CopyToDynamicDirectory();
+            CopyToTempPluginFolderDirectory();
 
             IEnumerable<Assembly> assemblies = null;
 
@@ -87,7 +87,7 @@
         /// <summary>
         /// 程序集复制到临时目录。
         /// </summary>
-        private static void CopyToDynamicDirectory()
+        private static void CopyToTempPluginFolderDirectory()
         {
             Directory.CreateDirectory(PluginFolder.FullName);
             Directory.CreateDirectory(TempPluginFolder.FullName);
@@ -154,17 +154,27 @@
 
             foreach (var assembly in assemblies)
             {
-                var pluginTypes = assembly.GetTypes().Where(type => type.GetInterface(typeof(IPlugin).Name) != null && type.IsClass && !type.IsAbstract);
-
-                foreach (var pluginType in pluginTypes)
+                try
                 {
-                    var plugin = GetPluginInstance(pluginType, assembly);
+                    var pluginTypes = assembly.GetTypes().Where(type => type.GetInterface(typeof(IPlugin).Name) != null && type.IsClass && !type.IsAbstract);
 
-                    if (plugin != null)
+                    foreach (var pluginType in pluginTypes)
                     {
-                        plugins.Add(plugin);
+                        var plugin = GetPluginInstance(pluginType, assembly);
+
+                        if (plugin != null)
+                        {
+                            plugins.Add(plugin);
+                        }
                     }
                 }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(assembly.FullName);
+                    Debug.WriteLine(ex.Message);
+                //    throw ex;
+                }
+
             }
 
             return plugins;
