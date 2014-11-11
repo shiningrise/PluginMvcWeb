@@ -12,14 +12,14 @@
     {
         public ActionResult List()
         {
-            ContentItem contentItem = new ContentItem { Id = 1, Title = "cccccccccccc_list 111。" + AppDomain.CurrentDomain.DynamicDirectory };
+            ContentItem contentItem = new ContentItem { Id = 1, Title = "List" };
 
             return View(contentItem);
         }
 
         public ActionResult Index()
         {
-            ContentItem contentItem = new ContentItem { Id = 1, Title = "abc_index 2" };
+            ContentItem contentItem = new ContentItem { Id = 1, Title = "Index" };
 
             return View(contentItem);
         }

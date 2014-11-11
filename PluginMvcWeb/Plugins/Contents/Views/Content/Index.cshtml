@@ -8,42 +8,4 @@
 
 <h2>@Model.Title</h2>
 
-
-copy /Y "$(TargetDir)$(ProjectName).dll" "$(SolutionDir)PluginMvcWeb\Bin\"
-
-<br />
-// 获取程序的基目录。System.AppDomain.CurrentDomain.BaseDirectory
-<br />
-@System.AppDomain.CurrentDomain.BaseDirectory
-<br />
-// 获取模块的完整路径。System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName
-<br />
-@System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName
-<br />
-<br />
-// 获取和设置当前目录(该进程从中启动的目录)的完全限定目录。System.Environment.CurrentDirectory
-<br />
-@System.Environment.CurrentDirectory
-<br />
-// 获取应用程序的当前工作目录。System.IO.Directory.GetCurrentDirectory()
-<br />
-@System.IO.Directory.GetCurrentDirectory()
-<br />
-// 获取和设置包括该应用程序的目录的名称。
-<br />
-System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase:
-<br />
-@System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase
-<br />
-System.AppDomain.CurrentDomain.SetupInformation.PrivateBinPath:
-<br />
-@System.AppDomain.CurrentDomain.SetupInformation.PrivateBinPath
-<br />
-System.AppDomain.CurrentDomain.SetupInformation.ShadowCopyDirectories :
-<br />
-@System.AppDomain.CurrentDomain.SetupInformation.ShadowCopyDirectories
-
-<br />
-System.AppDomain.CurrentDomain.DynamicDirectory :
-<br />
-@System.AppDomain.CurrentDomain.DynamicDirectory
+Contents/Content/Index
