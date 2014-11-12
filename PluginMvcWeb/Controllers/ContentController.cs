@@ -1,4 +1,4 @@
-﻿namespace Admin.Controllers
+﻿namespace PluginMvcWeb.Controllers
 {
     using System.Web.Mvc;
 
@@ -12,7 +12,7 @@
         public ActionResult List()
         {
          //   ContentItem contentItem = new ContentItem { Id = 1, Title = "cccccccccccc_list 111。" + AppDomain.CurrentDomain.DynamicDirectory };
-        //    this.RouteData.DataTokens.ContainsKey("area");
+
             return View();
         }
 

@@ -18,7 +18,7 @@
         {
             var logfile = string.Format("{0}App_Data\\{1:yyMMdd}.log", System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase, DateTime.Now);
 #if DEBUG
-            logfile = string.Format("{0}App_Data\\{1:yyMMddhhmmss}.log", System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase, DateTime.Now);
+            logfile = string.Format("{0}App_Data\\{1:yyMMdd_hhmmss}.log", System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase, DateTime.Now);
 #endif
             var traceListener = new TextWriterTraceListener(logfile);
             Debug.Listeners.Add(traceListener);

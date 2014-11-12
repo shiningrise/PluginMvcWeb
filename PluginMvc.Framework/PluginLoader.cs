@@ -31,8 +31,8 @@
         static PluginLoader()
         {
             PluginFolder = new DirectoryInfo(HostingEnvironment.MapPath("~/Plugins"));
-            TempPluginFolder = //new DirectoryInfo(AppDomain.CurrentDomain.DynamicDirectory);
-            new DirectoryInfo(HostingEnvironment.MapPath("~/App_Data/Dependencies"));
+            TempPluginFolder = new DirectoryInfo(AppDomain.CurrentDomain.DynamicDirectory);
+            //new DirectoryInfo(HostingEnvironment.MapPath("~/App_Data/Dependencies"));
             //System.AppDomain.CurrentDomain.BaseDirectory 
             var FrameworkPrivateBin = new DirectoryInfo(System.AppDomain.CurrentDomain.SetupInformation.PrivateBinPath);
             FrameworkPrivateBinFiles = FrameworkPrivateBin.GetFiles().Select(p => p.Name).ToList();
@@ -93,33 +93,33 @@
             Directory.CreateDirectory(TempPluginFolder.FullName);
 
             #if DEBUG 
-            Debug.WriteLine("\r\nFrameworkPrivateBinFiles:");
-            foreach (var item in FrameworkPrivateBinFiles)
-            {
-                Debug.WriteLine(item);
-            }
+            //Debug.WriteLine("\r\nFrameworkPrivateBinFiles:");
+            //foreach (var item in FrameworkPrivateBinFiles)
+            //{
+            //    Debug.WriteLine(item);
+            //}
             #endif
 
             //清理临时文件。
-            Debug.WriteLine("清理临时文件");
-            var pluginsTemp = TempPluginFolder.GetFiles("*.dll", SearchOption.AllDirectories).Where(p => FrameworkPrivateBinFiles.Contains(p.Name) == false);
-            foreach (var file in pluginsTemp)
-            {
-                try
-                {
-                    Debug.WriteLine(file.FullName);
-                    file.Delete();
-                }
-                catch (Exception)
-                {
+            //Debug.WriteLine("清理临时文件");
+            //var pluginsTemp = TempPluginFolder.GetFiles("*.dll", SearchOption.AllDirectories).Where(p => FrameworkPrivateBinFiles.Contains(p.Name) == false);
+            //foreach (var file in pluginsTemp)
+            //{
+            //    try
+            //    {
+            //        Debug.WriteLine(file.FullName);
+            //        file.Delete();
+            //    }
+            //    catch (Exception)
+            //    {
 
-                }
+            //    }
 
-            }
+            //}
 
             //复制插件进临时文件夹。
             #if DEBUG 
-            Debug.WriteLine("复制插件进临时文件夹");
+            //Debug.WriteLine("复制插件进临时文件夹");
             #endif
             var plugins = PluginFolder.GetFiles("*.dll", SearchOption.AllDirectories).Where(p => FrameworkPrivateBinFiles.Contains(p.Name) == false);
             //var plugins = PluginFolder.GetFiles("*.dll", SearchOption.AllDirectories);
@@ -131,8 +131,8 @@
                     var srcPath = plugin.FullName;
                     var toPath = Path.Combine(di.FullName, plugin.Name);
                     #if DEBUG 
-                    Debug.WriteLine(string.Format("from:\t{0}", srcPath));
-                    Debug.WriteLine(string.Format("to:\t{0}", toPath));
+                    //Debug.WriteLine(string.Format("from:\t{0}", srcPath));
+                    //Debug.WriteLine(string.Format("to:\t{0}", toPath));
                     #endif  
                     File.Copy(srcPath,toPath,true);
                 }
