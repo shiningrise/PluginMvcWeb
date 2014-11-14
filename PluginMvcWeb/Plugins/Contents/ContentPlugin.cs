@@ -8,13 +8,8 @@
     /// <summary>
     /// 内容插件。
     /// </summary>
-    public class ContentPlugin : IPlugin
+    public class ContentPlugin : PluginBase,IPlugin
     {
-        public string Name
-        {
-            get { return "Contents"; }
-        }
-
         public void Initialize()
         {
             //RouteTable.Routes.MapRoute(
@@ -24,15 +19,10 @@
             //);
 
             RouteTable.Routes.MapRoute(
-                name: "Plugin.Contents",
-                url: "Contents/{controller}/{action}/{id}",
+                name: this.Name,
+                url: this.Name + "/{controller}/{action}/{id}",
                 defaults: new { controller = "Content", action = "Index", id = UrlParameter.Optional, pluginName = this.Name }
             );
-        }
-
-        public void Unload()
-        {
-            RouteTable.Routes.Remove(RouteTable.Routes["Plugin.Contents"]);
         }
     }
 }

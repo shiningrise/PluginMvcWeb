@@ -8,14 +8,9 @@
     /// <summary>
     /// 内容插件。
     /// </summary>
-    public class AdminPlugin : IPlugin
+    public class AdminPlugin : PluginBase,IPlugin
     {
-        public string Name
-        {
-            get { return "Admin"; }
-        }
-
-        public void Initialize()
+        public override void Initialize()
         {
             //RouteTable.Routes.MapRoute(
             //    "Default",                                              // Route name
@@ -24,15 +19,10 @@
             //);
 
             RouteTable.Routes.MapRoute(
-                name: "Admin",
-                url: "Admin/{controller}/{action}/{id}",
+                name: this.Name,
+                url: this.Name + "/{controller}/{action}/{id}",
                 defaults: new { controller = "Content", action = "Index", id = UrlParameter.Optional, pluginName = this.Name }
             );
-        }
-
-        public void Unload()
-        {
-            RouteTable.Routes.Remove(RouteTable.Routes["Admin"]);
         }
     }
 }

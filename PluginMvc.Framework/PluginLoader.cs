@@ -31,8 +31,8 @@
         static PluginLoader()
         {
             PluginFolder = new DirectoryInfo(HostingEnvironment.MapPath("~/Plugins"));
-            TempPluginFolder = new DirectoryInfo(AppDomain.CurrentDomain.DynamicDirectory);
-            //new DirectoryInfo(HostingEnvironment.MapPath("~/App_Data/Dependencies"));
+            TempPluginFolder = //new DirectoryInfo(AppDomain.CurrentDomain.DynamicDirectory);
+                new DirectoryInfo(HostingEnvironment.MapPath("~/App_Data/Plugins"));
             //System.AppDomain.CurrentDomain.BaseDirectory 
             var FrameworkPrivateBin = new DirectoryInfo(System.AppDomain.CurrentDomain.SetupInformation.PrivateBinPath);
             FrameworkPrivateBinFiles = FrameworkPrivateBin.GetFiles().Select(p => p.Name).ToList();

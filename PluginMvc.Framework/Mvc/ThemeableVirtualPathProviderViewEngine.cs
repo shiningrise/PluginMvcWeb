@@ -155,10 +155,6 @@ namespace PluginMvc.Framework.Mvc
                 var pluginName = routeData.GetRequiredString("pluginName");
                 return pluginName;
             }
-            if (routeData.DataTokens.ContainsKey("area"))
-                System.Diagnostics.Trace.WriteLine(routeData.DataTokens["area"].ToString());
-            else
-                System.Diagnostics.Trace.WriteLine("area = null");
 
             object obj2;
             if (routeData.DataTokens.TryGetValue("area", out obj2))
@@ -178,11 +174,6 @@ namespace PluginMvc.Framework.Mvc
             var route2 = route as Route;
             if ((route2 != null) && (route2.DataTokens != null) && (route2.DataTokens.ContainsKey("pluginName")))
             {
-                if (route2.DataTokens.ContainsKey("area"))
-                    System.Diagnostics.Trace.WriteLine(route2.DataTokens["area"].ToString());
-                else
-                    System.Diagnostics.Trace.WriteLine("area = null");
-
                 route2.DataTokens["area"] = route2.DataTokens["pluginName"];
                 System.Diagnostics.Trace.WriteLine(route2.DataTokens["pluginName"].ToString());
                 return (route2.DataTokens["pluginName"] as string);
