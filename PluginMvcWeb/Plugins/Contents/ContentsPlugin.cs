@@ -4,19 +4,25 @@
     using System.Web.Routing;
 
     using PluginMvc.Framework;
+    using System.Diagnostics;
+    using System;
+    using System.Reflection;
 
     /// <summary>
     /// 内容插件。
     /// </summary>
-    public class ContentPlugin : PluginBase,IPlugin
+    public class ContentsPlugin : PluginBase, IPlugin
     {
-        public void Initialize()
+        public override string Name
         {
-            //RouteTable.Routes.MapRoute(
-            //    "Default",                                              // Route name
-            //    "{controller}/{action}/{id}",                           // URL with parameters
-            //    new { controller = "Home", action = "Index", id = "" }  // Parameter defaults
-            //);
+            get
+            {
+                return "Contents";
+            }
+        }
+
+        public override void Initialize()
+        {
 
             RouteTable.Routes.MapRoute(
                 name: this.Name,

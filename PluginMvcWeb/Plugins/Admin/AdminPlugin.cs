@@ -10,6 +10,14 @@
     /// </summary>
     public class AdminPlugin : PluginBase,IPlugin
     {
+        public override string Name
+        {
+            get
+            {
+                return "Admin";
+            }
+        }
+
         public override void Initialize()
         {
             //RouteTable.Routes.MapRoute(
