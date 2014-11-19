@@ -9,7 +9,9 @@
     <projectUrl>https://github.com/shiningrise/PluginMvcWeb</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>PluginMvcWeb 目前本组件只支持mvc4</description>
-    <releaseNotes>PluginMvcWeb.</releaseNotes>
+    <releaseNotes>
+      - 2014-11-19 添加依赖项目接口 IPlugin.DependentAssembly
+    </releaseNotes>
     <copyright>Copyright 2014</copyright>
     <tags>Pluginable Mvc4</tags>
   </metadata>
