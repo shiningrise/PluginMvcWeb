@@ -106,7 +106,6 @@
   <ItemGroup>
     <Compile Include="ContentsPlugin.cs" />
     <Compile Include="Controllers\ContentController.cs" />
-    <Compile Include="Models\ContentItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -127,6 +126,10 @@
     <ProjectReference Include="..\..\..\PluginMvc.Framework\PluginMvc.Framework.csproj">
       <Project>{a9c398a6-e41a-4c34-9fce-6b7982fb53ca}</Project>
       <Name>PluginMvc.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Plugins\Plugin.Contents.Models\Plugin.Contents.Models.csproj">
+      <Project>{a024513f-65a6-4180-bc6a-4b99187a4f59}</Project>
+      <Name>Plugin.Contents.Models</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

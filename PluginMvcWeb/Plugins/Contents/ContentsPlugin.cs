@@ -21,6 +21,16 @@
             }
         }
 
+        public override System.Collections.Generic.List<string> DependentAssembly
+        {
+            get
+            {
+                var assems = new System.Collections.Generic.List<string>();
+                assems.Add("Plugin.Contents.Models");
+                return assems;
+            }
+        }
+
         public override void Initialize()
         {
 

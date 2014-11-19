@@ -34,8 +34,9 @@
         {
             PluginFolder = new DirectoryInfo(HostingEnvironment.MapPath("~/Plugins"));
             TempPluginFolder = new DirectoryInfo(AppDomain.CurrentDomain.DynamicDirectory);
-                //new DirectoryInfo(HostingEnvironment.MapPath("~/App_Data/Plugins"));
-
+#if DEBUG
+            TempPluginFolder = new DirectoryInfo(HostingEnvironment.MapPath("~/App_Data/Plugins"));
+#endif
             var FrameworkPrivateBin = new DirectoryInfo(System.AppDomain.CurrentDomain.SetupInformation.PrivateBinPath);
             FrameworkPrivateBinFiles = FrameworkPrivateBin.GetFiles().Select(p => p.Name).ToList();
         }
@@ -71,7 +72,7 @@
         /// <param name="pluginType"></param>
         /// <param name="assembly"></param>
         /// <returns></returns>
-        private static PluginDescriptor GetPluginInstance(Type pluginType, Assembly assembly)
+        private static PluginDescriptor GetPluginInstance(Type pluginType, Assembly assembly, IEnumerable<Assembly> assemblies)
         {
             if (pluginType != null)
             {
@@ -79,7 +80,13 @@
 
                 if (plugin != null)
                 {
-                    return new PluginDescriptor(plugin, assembly, assembly.GetTypes());
+                    foreach (var item in assemblies)
+	                {
+                        var assName = item.GetName().Name;
+                        Debug.WriteLine(assName);
+	                } 
+                    var assems = assemblies.Where(p => plugin.DependentAssembly.Contains(p.GetName().Name)).ToList();
+                    return new PluginDescriptor(plugin, assembly, assembly.GetTypes(), assems);//
                 }
             }
 
@@ -156,7 +163,7 @@
 
                     foreach (var pluginType in pluginTypes)
                     {
-                        var plugin = GetPluginInstance(pluginType, assembly);
+                        var plugin = GetPluginInstance(pluginType, assembly, assemblies);
 
                         if (plugin != null)
                         {

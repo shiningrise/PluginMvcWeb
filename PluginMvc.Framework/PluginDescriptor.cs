@@ -18,7 +18,7 @@
         /// <summary>
         /// 构造器。
         /// </summary>
-        public PluginDescriptor(IPlugin plugin, Assembly assembly, IEnumerable<Type> types)
+        public PluginDescriptor(IPlugin plugin, Assembly assembly, IEnumerable<Type> types, IEnumerable<Assembly> dependentAssemblys = null)
         {
             this.Plugin = plugin;
             this.Assembly = assembly;
@@ -30,6 +30,11 @@
             {
                 this.AddControllerType(type);
             }
+            if (DependentAssemblys == null)
+            {
+                DependentAssemblys = new List<Assembly>();
+            }
+            DependentAssemblys.AddRange(dependentAssemblys);
         }
 
         /// <summary>
@@ -41,6 +46,8 @@
         /// 程序集。
         /// </summary>
         public Assembly Assembly { get; private set; }
+
+        public List<Assembly> DependentAssemblys { get; private set; }
 
         /// <summary>
         /// 类型。

@@ -1,4 +1,5 @@
-﻿namespace PluginMvc.Framework
+﻿using System.Collections.Generic;
+namespace PluginMvc.Framework
 {
     /// <summary>
     /// 插件接口。
@@ -9,6 +10,8 @@
         /// 名称。
         /// </summary>
         string Name { get; }
+
+        List<string> DependentAssembly { get; }
 
         /// <summary>
         /// 初始化。

@@ -22,6 +22,11 @@ namespace PluginMvc.Framework
             }
         }
 
+        public virtual List<string> DependentAssembly
+        {
+            get { return new List<string>(); }
+        }
+
         public virtual void Initialize()
         {
             //RouteTable.Routes.MapRoute(
@@ -41,5 +46,6 @@ namespace PluginMvc.Framework
         {
             RouteTable.Routes.Remove(RouteTable.Routes[this.Name]);
         }
+
     }
 }

@@ -285,6 +285,13 @@ namespace PluginMvc.Framework.Mvc
                 if (plugin != null)
                 {
                     provider.AssemblyBuilder.AddAssemblyReference(plugin.Assembly);
+                    if (plugin.DependentAssemblys != null)
+                    {
+                        foreach (var assem in plugin.DependentAssemblys)
+                        {
+                            provider.AssemblyBuilder.AddAssemblyReference(assem);
+                        }
+                    }
                 }
             };
         }
