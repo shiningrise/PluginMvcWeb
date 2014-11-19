@@ -6,7 +6,9 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Web;
     using System.Web.Hosting;
+    using System.Xml;
 
     /// <summary>
     /// 插件加载器。
@@ -31,9 +33,9 @@
         static PluginLoader()
         {
             PluginFolder = new DirectoryInfo(HostingEnvironment.MapPath("~/Plugins"));
-            TempPluginFolder = //new DirectoryInfo(AppDomain.CurrentDomain.DynamicDirectory);
-                new DirectoryInfo(HostingEnvironment.MapPath("~/App_Data/Plugins"));
-            //System.AppDomain.CurrentDomain.BaseDirectory 
+            TempPluginFolder = new DirectoryInfo(AppDomain.CurrentDomain.DynamicDirectory);
+                //new DirectoryInfo(HostingEnvironment.MapPath("~/App_Data/Plugins"));
+
             var FrameworkPrivateBin = new DirectoryInfo(System.AppDomain.CurrentDomain.SetupInformation.PrivateBinPath);
             FrameworkPrivateBinFiles = FrameworkPrivateBin.GetFiles().Select(p => p.Name).ToList();
         }
@@ -116,7 +118,7 @@
             foreach (var pluginDirectory in pluginDirectories)
             {
                 var dir = new DirectoryInfo(Path.Combine(pluginDirectory.FullName, "bin"));
-                var plugindlls = dir.GetFiles("*.dll", SearchOption.AllDirectories).Where(p => FrameworkPrivateBinFiles.Contains(p.Name) == false);
+                var plugindlls = dir.GetFiles("*.dll", SearchOption.TopDirectoryOnly).Where(p => FrameworkPrivateBinFiles.Contains(p.Name) == false);
                 foreach (var plugindll in plugindlls)
                 {
                     try
