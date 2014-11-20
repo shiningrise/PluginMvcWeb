@@ -12,6 +12,7 @@
     /// </summary>
     public static class PluginManager
     {
+
         /// <summary>
         /// 插件字典。
         /// </summary>

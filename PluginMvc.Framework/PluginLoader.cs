@@ -15,6 +15,14 @@
     /// </summary>
     public static class PluginLoader
     {
+        #region Const
+
+        private const string InstalledPluginsFilePath = "~/App_Data/InstalledPlugins.txt";
+        private const string PluginsPath = "~/Plugins";
+        private const string ShadowCopyPath = "~/App_Data/Plugins";
+
+        #endregion
+
         /// <summary>
         /// 插件目录。
         /// </summary>
@@ -32,10 +40,10 @@
         /// </summary>
         static PluginLoader()
         {
-            PluginFolder = new DirectoryInfo(HostingEnvironment.MapPath("~/Plugins"));
+            PluginFolder = new DirectoryInfo(HostingEnvironment.MapPath(PluginsPath));
             TempPluginFolder = new DirectoryInfo(AppDomain.CurrentDomain.DynamicDirectory);
 #if DEBUG
-            TempPluginFolder = new DirectoryInfo(HostingEnvironment.MapPath("~/App_Data/Plugins"));
+            TempPluginFolder = new DirectoryInfo(HostingEnvironment.MapPath(ShadowCopyPath));
 #endif
             var FrameworkPrivateBin = new DirectoryInfo(System.AppDomain.CurrentDomain.SetupInformation.PrivateBinPath);
             FrameworkPrivateBinFiles = FrameworkPrivateBin.GetFiles().Select(p => p.Name).ToList();
@@ -48,22 +56,62 @@
         {
             List<PluginDescriptor> plugins = new List<PluginDescriptor>();
 
-            //程序集复制到临时目录。
-            CopyToTempPluginFolderDirectory();
+            if (PluginFolder == null)
+                throw new ArgumentNullException("pluginFolder");
 
-            IEnumerable<Assembly> assemblies = null;
+            //create list (<file info, parsed plugin descritor>)
+            var descriptionFiles = new List<KeyValuePair<FileInfo, PluginDescriptor>>();
+            //add display order and path to list
+            foreach (var descriptionFile in PluginFolder.GetFiles("Description.txt", SearchOption.AllDirectories))
+            {
+                if (!IsPackagePluginFolder(descriptionFile.Directory))
+                    continue;
+
+                //parse file
+                var pluginDescriptor = PluginFileParser.ParsePluginDescriptionFile(descriptionFile.FullName);
+
+                //populate list
+                descriptionFiles.Add(new KeyValuePair<FileInfo, PluginDescriptor>(descriptionFile, pluginDescriptor));
+            }
+
+            //sort list by display order. NOTE: Lowest DisplayOrder will be first i.e 0 , 1, 1, 1, 5, 10
+            //it's required: http://www.nopcommerce.com/boards/t/17455/load-plugins-based-on-their-displayorder-on-startup.aspx
+            descriptionFiles.Sort((firstPair, nextPair) => firstPair.Value.DisplayOrder.CompareTo(nextPair.Value.DisplayOrder));
+            //return result;
+
+            //程序集复制到临时目录。
+            CopyToTempPluginFolderDirectory(descriptionFiles);
 
             //加载 bin 目录下的所有程序集。
-            assemblies = AppDomain.CurrentDomain.GetAssemblies();
-
-            plugins.AddRange(GetAssemblies(assemblies));
-
+            IEnumerable<Assembly>  assemblies = AppDomain.CurrentDomain.GetAssemblies();
             //加载临时目录下的所有程序集。
-            assemblies = TempPluginFolder.GetFiles("*.dll", SearchOption.AllDirectories).Select(x => Assembly.LoadFile(x.FullName));
-
-            plugins.AddRange(GetAssemblies(assemblies));
+            assemblies = assemblies.Union(TempPluginFolder.GetFiles("*.dll", SearchOption.AllDirectories).Select(x => Assembly.LoadFile(x.FullName)));
+            plugins.AddRange(InitPlugins(assemblies, descriptionFiles));
 
             return plugins;
+        }
+
+        /// <summary>
+        /// Determines if the folder is a bin plugin folder for a package
+        /// </summary>
+        /// <param name="folder"></param>
+        /// <returns></returns>
+        private static bool IsPackagePluginFolder(DirectoryInfo folder)
+        {
+            if (folder == null) return false;
+            if (folder.Parent == null) return false;
+            if (!folder.Parent.Name.Equals("Plugins", StringComparison.InvariantCultureIgnoreCase)) return false;
+            return true;
+        }
+
+        /// <summary>
+        /// Gets the full path of InstalledPlugins.txt file
+        /// </summary>
+        /// <returns></returns>
+        private static string GetInstalledPluginsFilePath()
+        {
+            var filePath = HostingEnvironment.MapPath(InstalledPluginsFilePath);
+            return filePath;
         }
 
         /// <summary>
@@ -72,22 +120,17 @@
         /// <param name="pluginType"></param>
         /// <param name="assembly"></param>
         /// <returns></returns>
-        private static PluginDescriptor GetPluginInstance(Type pluginType, Assembly assembly, IEnumerable<Assembly> assemblies)
+        private static IPlugin GetPluginInstance(Type pluginType, Assembly assembly, IEnumerable<Assembly> assemblies)
         {
             if (pluginType != null)
             {
                 var plugin = (IPlugin)Activator.CreateInstance(pluginType);
-
-                if (plugin != null)
-                {
-                    foreach (var item in assemblies)
-	                {
-                        var assName = item.GetName().Name;
-                        Debug.WriteLine(assName);
-	                } 
-                    var assems = assemblies.Where(p => plugin.DependentAssembly.Contains(p.GetName().Name)).ToList();
-                    return new PluginDescriptor(plugin, assembly, assembly.GetTypes(), assems);//
-                }
+                return plugin;
+                //if (plugin != null)
+                //{
+                //    var assems = assemblies.Where(p => plugin.DependentAssembly.Contains(p.GetName().Name)).ToList();
+                //    return new PluginDescriptor(plugin, assembly, assembly.GetTypes(), assems);//
+                //}
             }
 
             return null;
@@ -96,8 +139,9 @@
         /// <summary>
         /// 程序集复制到临时目录。
         /// </summary>
-        private static void CopyToTempPluginFolderDirectory()
+        private static void CopyToTempPluginFolderDirectory(List<KeyValuePair<FileInfo, PluginDescriptor>> pluginDescriptions)
         {
+            var installedPluginSystemNames = PluginFileParser.ParseInstalledPluginsFile(GetInstalledPluginsFilePath());
             Directory.CreateDirectory(PluginFolder.FullName);
             Directory.CreateDirectory(TempPluginFolder.FullName);
 
@@ -118,14 +162,13 @@
             }
 
             //复制插件进临时文件夹。
-#if DEBUG
-            //Debug.WriteLine("复制插件进临时文件夹");
-#endif
-            var pluginDirectories = PluginFolder.GetDirectories();
-            foreach (var pluginDirectory in pluginDirectories)
+            //var pluginDirectories = PluginFolder.GetDirectories().Where(p => installedPluginSystemNames.Contains(p.Name)).ToList();
+            var list = pluginDescriptions.Where(p=>installedPluginSystemNames.Contains(p.Value.SystemName));
+            foreach (var plugin in list)
             {
-                var dir = new DirectoryInfo(Path.Combine(pluginDirectory.FullName, "bin"));
-                var plugindlls = dir.GetFiles("*.dll", SearchOption.TopDirectoryOnly).Where(p => FrameworkPrivateBinFiles.Contains(p.Name) == false);
+                var PluginFileNames = plugin.Value.PluginFileName.Split(',');
+                var dir = new DirectoryInfo(Path.Combine(plugin.Key.Directory.FullName, "bin"));
+                var plugindlls = dir.GetFiles("*.dll", SearchOption.TopDirectoryOnly).Where(p => PluginFileNames.Contains(p.Name) == true && FrameworkPrivateBinFiles.Contains(p.Name) == false);
                 foreach (var plugindll in plugindlls)
                 {
                     try
@@ -151,10 +194,9 @@
         /// </summary>
         /// <param name="assemblies">程序集列表</param>
         /// <returns>插件信息集合。</returns>
-        private static IEnumerable<PluginDescriptor> GetAssemblies(IEnumerable<Assembly> assemblies)
+        private static IEnumerable<PluginDescriptor> InitPlugins(IEnumerable<Assembly> assemblies, List<KeyValuePair<FileInfo, PluginDescriptor>> descriptionFiles)
         {
-            IList<PluginDescriptor> plugins = new List<PluginDescriptor>();
-
+            IList<PluginDescriptor> descriptors = new List<PluginDescriptor>();
             foreach (var assembly in assemblies)
             {
                 try
@@ -163,11 +205,15 @@
 
                     foreach (var pluginType in pluginTypes)
                     {
-                        var plugin = GetPluginInstance(pluginType, assembly, assemblies);
-
-                        if (plugin != null)
+                        if (pluginType != null)
                         {
-                            plugins.Add(plugin);
+                            var plugin = (IPlugin)Activator.CreateInstance(pluginType);
+                            var descriptor = descriptionFiles.Where(p => p.Value.SystemName == plugin.Name).Select(p=>p.Value).FirstOrDefault();
+                            if(descriptor != null)
+                            {
+                                descriptor.Init(plugin, assemblies);
+                                descriptors.Add(descriptor);
+                            }
                         }
                     }
                 }
@@ -180,7 +226,7 @@
 
             }
 
-            return plugins;
+            return descriptors;
         }
     }
 }

@@ -53,6 +53,7 @@
     <Compile Include="Mvc\ThemeableVirtualPathProviderViewEngine.cs" />
     <Compile Include="PluginBase.cs" />
     <Compile Include="PluginDescriptor.cs" />
+    <Compile Include="PluginFileParser.cs" />
     <Compile Include="PluginLoader.cs" />
     <Compile Include="PluginManager.cs" />
     <Compile Include="PluginWatcher.cs" />
