@@ -85,9 +85,9 @@
             CopyToTempPluginFolderDirectory(plugins);
 
             //加载 bin 目录下的所有程序集。
-            IEnumerable<Assembly> assemblies = TempPluginFolder.GetFiles("*.dll", SearchOption.AllDirectories).Select(x => Assembly.LoadFile(x.FullName)).ToList();//AppDomain.CurrentDomain.GetAssemblies();
+            IEnumerable<Assembly> assemblies = AppDomain.CurrentDomain.GetAssemblies();
             //加载临时目录下的所有程序集。
-            //assemblies = assemblies.Union(TempPluginFolder.GetFiles("*.dll", SearchOption.AllDirectories).Select(x => Assembly.LoadFile(x.FullName)).ToList());
+            assemblies = assemblies.Union(TempPluginFolder.GetFiles("*.dll", SearchOption.AllDirectories).Select(x => Assembly.LoadFile(x.FullName)).ToList());
             InitPlugins(assemblies, plugins);
 
             return plugins;

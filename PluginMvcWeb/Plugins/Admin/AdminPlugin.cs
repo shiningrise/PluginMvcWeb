@@ -4,21 +4,23 @@
     using System.Web.Routing;
 
     using PluginMvc.Framework;
+    using System.Reflection;
 
     /// <summary>
     /// 内容插件。
     /// </summary>
-    public class AdminPlugin : PluginBase,IPlugin
+    public class AdminPlugin : IPlugin
     {
-        public override string Name
+        public string Name
         {
             get
             {
-                return "Admin";
+                return Assembly.GetExecutingAssembly().GetName().Name.Replace("Plugin.", "");
+                //return "Admin";
             }
         }
 
-        public override void Initialize()
+        public void Initialize()
         {
             //RouteTable.Routes.MapRoute(
             //    "Default",                                              // Route name
@@ -31,6 +33,11 @@
                 url: this.Name + "/{controller}/{action}/{id}",
                 defaults: new { controller = "Content", action = "Index", id = UrlParameter.Optional, pluginName = this.Name }
             );
+        }
+
+        public virtual void Unload()
+        {
+            RouteTable.Routes.Remove(RouteTable.Routes[this.Name]);
         }
     }
 }

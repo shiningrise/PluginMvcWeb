@@ -11,7 +11,7 @@ namespace PluginMvc.Framework
         /// </summary>
         string Name { get; }
 
-        List<string> DependentAssembly { get; }
+        //List<string> DependentAssembly { get; }
 
         /// <summary>
         /// 初始化。

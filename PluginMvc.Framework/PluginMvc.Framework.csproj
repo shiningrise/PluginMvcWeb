@@ -51,7 +51,6 @@
     <Compile Include="Mvc\PluginRazorViewEngine.cs" />
     <Compile Include="Mvc\ThemeableRazorViewEngine.cs" />
     <Compile Include="Mvc\ThemeableVirtualPathProviderViewEngine.cs" />
-    <Compile Include="PluginBase.cs" />
     <Compile Include="PluginDescriptor.cs" />
     <Compile Include="PluginFileParser.cs" />
     <Compile Include="PluginLoader.cs" />

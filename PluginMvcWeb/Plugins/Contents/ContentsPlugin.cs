@@ -11,9 +11,9 @@
     /// <summary>
     /// 内容插件。
     /// </summary>
-    public class ContentsPlugin : PluginBase, IPlugin
+    public class ContentsPlugin : IPlugin
     {
-        public override string Name
+        public string Name
         {
             get
             {
@@ -21,17 +21,7 @@
             }
         }
 
-        public override System.Collections.Generic.List<string> DependentAssembly
-        {
-            get
-            {
-                var assems = new System.Collections.Generic.List<string>();
-                assems.Add("Plugin.Contents.Models");
-                return assems;
-            }
-        }
-
-        public override void Initialize()
+        public void Initialize()
         {
 
             RouteTable.Routes.MapRoute(
@@ -39,6 +29,11 @@
                 url: this.Name + "/{controller}/{action}/{id}",
                 defaults: new { controller = "Content", action = "Index", id = UrlParameter.Optional, pluginName = this.Name }
             );
+        }
+
+        public void Unload()
+        {
+            RouteTable.Routes.Remove(RouteTable.Routes[this.Name]);
         }
     }
 }
