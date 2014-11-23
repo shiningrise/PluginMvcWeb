@@ -97,5 +97,66 @@
         {
             return GetPlugins().SingleOrDefault(plugin => plugin.Plugin.Name == name);
         }
+
+        
+        /// <summary>
+        /// Mark plugin as installed
+        /// </summary>
+        /// <param name="systemName">Plugin system name</param>
+        public static void MarkPluginAsInstalled(string systemName)
+        {
+            if (String.IsNullOrEmpty(systemName))
+                throw new ArgumentNullException("systemName");
+
+            var filePath = PluginLoader.GetInstalledPluginsFilePath();
+            if (!File.Exists(filePath))
+                using (File.Create(filePath))
+                {
+                    //we use 'using' to close the file after it's created
+                }
+
+
+            var installedPluginSystemNames = PluginFileParser.ParseInstalledPluginsFile(PluginLoader.GetInstalledPluginsFilePath());
+            bool alreadyMarkedAsInstalled = installedPluginSystemNames
+                                .FirstOrDefault(x => x.Equals(systemName, StringComparison.InvariantCultureIgnoreCase)) != null;
+            if (!alreadyMarkedAsInstalled)
+                installedPluginSystemNames.Add(systemName);
+            PluginFileParser.SaveInstalledPluginsFile(installedPluginSystemNames,filePath);
+        }
+
+        /// <summary>
+        /// Mark plugin as uninstalled
+        /// </summary>
+        /// <param name="systemName">Plugin system name</param>
+        public static void MarkPluginAsUninstalled(string systemName)
+        {
+            if (String.IsNullOrEmpty(systemName))
+                throw new ArgumentNullException("systemName");
+
+            var filePath = PluginLoader.GetInstalledPluginsFilePath();
+            if (!File.Exists(filePath))
+                using (File.Create(filePath))
+                {
+                    //we use 'using' to close the file after it's created
+                }
+
+
+            var installedPluginSystemNames = PluginFileParser.ParseInstalledPluginsFile(PluginLoader.GetInstalledPluginsFilePath());
+            bool alreadyMarkedAsInstalled = installedPluginSystemNames
+                                .FirstOrDefault(x => x.Equals(systemName, StringComparison.InvariantCultureIgnoreCase)) != null;
+            if (alreadyMarkedAsInstalled)
+                installedPluginSystemNames.Remove(systemName);
+            PluginFileParser.SaveInstalledPluginsFile(installedPluginSystemNames,filePath);
+        }
+
+        /// <summary>
+        /// Mark plugin as uninstalled
+        /// </summary>
+        public static void MarkAllPluginsAsUninstalled()
+        {
+            var filePath = PluginLoader.GetInstalledPluginsFilePath();
+            if (File.Exists(filePath))
+                File.Delete(filePath);
+        }
     }
 }

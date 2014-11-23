@@ -88,9 +88,6 @@ namespace PluginMvc.Framework
                     case "FriendlyName":
                         descriptor.FriendlyName = value;
                         break;
-                    case "SystemName":
-                        descriptor.SystemName = value;
-                        break;
                     case "Version":
                         descriptor.Version = value;
                         break;
@@ -149,15 +146,14 @@ namespace PluginMvc.Framework
 
             //get the Description.txt file path
             if (plugin.OriginalAssemblyFile == null)
-                throw new Exception(string.Format("Cannot load original assembly path for {0} plugin.", plugin.SystemName));
+                throw new Exception(string.Format("Cannot load original assembly path for {0} plugin.", plugin.Name));
             var filePath = Path.Combine(plugin.OriginalAssemblyFile.Directory.FullName, "Description.txt");
             if (!File.Exists(filePath))
-                throw new Exception(string.Format("Description file for {0} plugin does not exist. {1}", plugin.SystemName, filePath));
+                throw new Exception(string.Format("Description file for {0} plugin does not exist. {1}", plugin.Name, filePath));
 
             var keyValues = new List<KeyValuePair<string, string>>();
             keyValues.Add(new KeyValuePair<string, string>("Group", plugin.Group));
             keyValues.Add(new KeyValuePair<string, string>("FriendlyName", plugin.FriendlyName));
-            keyValues.Add(new KeyValuePair<string, string>("SystemName", plugin.SystemName));
             keyValues.Add(new KeyValuePair<string, string>("Version", plugin.Version));
             keyValues.Add(new KeyValuePair<string, string>("SupportedVersions", string.Join(",", plugin.SupportedVersions)));
             keyValues.Add(new KeyValuePair<string, string>("Author", plugin.Author));

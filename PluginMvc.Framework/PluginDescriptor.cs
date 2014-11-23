@@ -139,9 +139,9 @@
         public virtual string FriendlyName { get; set; }
 
         /// <summary>
-        /// Gets or sets the system name
+        /// Gets or sets the Plugin name
         /// </summary>
-        public virtual string SystemName { get; set; }
+        public virtual string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the version
@@ -192,13 +192,13 @@
         {
             var other = obj as PluginDescriptor;
             return other != null &&
-                SystemName != null &&
-                SystemName.Equals(other.SystemName);
+                Name != null &&
+                Name.Equals(other.Name);
         }
 
         public override int GetHashCode()
         {
-            return SystemName.GetHashCode();
+            return Name.GetHashCode();
         }
 
     }

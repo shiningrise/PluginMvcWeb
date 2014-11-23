@@ -1,6 +1,5 @@
 ﻿Group: core
 FriendlyName: Admin
-SystemName: Admin
 Version: 1.00
 SupportedVersions: 1.00
 Author: wxy
