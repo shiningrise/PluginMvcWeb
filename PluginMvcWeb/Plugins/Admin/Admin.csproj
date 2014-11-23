@@ -85,7 +85,6 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Description.txt" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -98,6 +97,7 @@
     <Content Include="Views\Content\Index.cshtml" />
     <Content Include="Views\Content\List.cshtml" />
     <Content Include="Views\Web.config" />
+    <Content Include="Description_bak.txt" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -155,7 +155,7 @@
             //复制插件进临时文件夹。
             foreach (var plugin in pluginDescriptions)
             {
-                var PluginFileNames = plugin.PluginFileName.Split(',');
+                var PluginFileNames = plugin.PluginFileName == null ? new string[]{} : plugin.PluginFileName.Split(',');
                 var dir = new DirectoryInfo(Path.Combine(PluginFolder.FullName, Path.Combine(plugin.Name, "bin")));
                 var list = dir.GetFiles("*.dll", SearchOption.AllDirectories);
                 var plugindlls = new List<FileInfo>();
