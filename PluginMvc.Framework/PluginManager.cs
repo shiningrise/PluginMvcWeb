@@ -5,7 +5,6 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using System.Web.Hosting;
 
     /// <summary>
     /// 插件管理器。
