@@ -6,8 +6,6 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using System.Web;
-    using System.Web.Hosting;
     using System.Xml;
 
     /// <summary>
@@ -17,9 +15,9 @@
     {
         #region Const
 
-        public const string InstalledPluginsFilePath = "~/App_Data/InstalledPlugins.txt";
-        public const string PluginsPath = "~/Plugins";
-        public const string ShadowCopyPath = "~/App_Data/Plugins";
+        public static string InstalledPluginsFilePath = Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase,@"App_Data\InstalledPlugins.txt");
+        public static string PluginsPath = Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase,@"Plugins");
+        public static string ShadowCopyPath = Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase,@"App_Data\Plugins");
 
         #endregion
 
@@ -40,10 +38,10 @@
         /// </summary>
         static PluginLoader()
         {
-            PluginFolder = new DirectoryInfo(HostingEnvironment.MapPath(PluginsPath));
+            PluginFolder = new DirectoryInfo(PluginsPath);
             TempPluginFolder = new DirectoryInfo(AppDomain.CurrentDomain.DynamicDirectory);
 #if DEBUG
-            TempPluginFolder = new DirectoryInfo(HostingEnvironment.MapPath(ShadowCopyPath));
+            TempPluginFolder = new DirectoryInfo(ShadowCopyPath);
 #endif
             var FrameworkPrivateBin = new DirectoryInfo(System.AppDomain.CurrentDomain.SetupInformation.PrivateBinPath);
             FrameworkPrivateBinFiles = FrameworkPrivateBin.GetFiles().Select(p => p.Name).ToList();
@@ -101,7 +99,7 @@
         /// <returns></returns>
         public static string GetInstalledPluginsFilePath()
         {
-            var filePath = HostingEnvironment.MapPath(InstalledPluginsFilePath);
+            var filePath = InstalledPluginsFilePath;
             return filePath;
         }
 

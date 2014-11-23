@@ -11,6 +11,8 @@
     <description>PluginMvcWeb 目前本组件只支持mvc4</description>
     <releaseNotes>
       - 2014-11-19 添加依赖项目接口 IPlugin.DependentAssembly
+      - 2014-11-23 增加与nopcommerce一致的插件描述文件的Description.txt与插件安装记录文件InstalledPlugins.txt
+      -            可在Description.txt指定需要复制的插件依赖dll文件，如FileName: Plugin.Contents.dll,Plugin.Contents.Models.dll
     </releaseNotes>
     <copyright>Copyright 2014</copyright>
     <tags>Pluginable Mvc4</tags>

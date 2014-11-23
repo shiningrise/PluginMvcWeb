@@ -1,7 +1,6 @@
 ﻿namespace PluginMvc.Framework
 {
     using System.IO;
-    using System.Web.Hosting;
 
     /// <summary>
     /// 插件检测器。
@@ -22,7 +21,7 @@
 
         static PluginWatcher()
         {
-            _fileSystemWatcher.Path = HostingEnvironment.MapPath("~/Plugins");
+            _fileSystemWatcher.Path = PluginLoader.PluginsPath;
             _fileSystemWatcher.Filter = "*.dll";
 
             _fileSystemWatcher.Changed += _fileSystemWatcher_Changed;
