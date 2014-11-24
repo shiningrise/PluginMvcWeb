@@ -1,9 +1,11 @@
-﻿namespace PluginMvc.Framework.Mvc
-{
-    using System;
-    using System.Web.Mvc;
-    using System.Web.Routing;
+﻿
+using System;
+using System.Web.Mvc;
+using System.Web.Routing;
+using System.Linq;
 
+namespace PluginMvc.Framework.Mvc
+{
     /// <summary>
     /// 插件控制器工厂。
     /// </summary>
@@ -42,10 +44,11 @@
         private Type GetControllerType(string pluginName,string controllerName)
         {
             var plugin = PluginManager.GetPlugin(pluginName);
-            var type = plugin.GetControllerType(controllerName + "Controller");
-            if (type != null)
+            var controlName = controllerName + "Controller";
+            var control = plugin.Assembly.GetTypes().FirstOrDefault(p=>p.Name == controlName);;
+            if (control != null)
             {
-                return type;
+                return control;
             }
 
             return null;

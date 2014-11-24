@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Reflection;
-    using System.Web.Mvc;
     using System.Linq;
 
     /// <summary>
@@ -12,11 +11,6 @@
     /// </summary>
     public class PluginDescriptor
     {
-        /// <summary>
-        /// 控制器类型字典。
-        /// </summary>
-        private readonly IDictionary<string, Type> _controllerTypes = new Dictionary<string, Type>();
-
         /// <summary>
         /// 构造器。
         /// </summary>
@@ -26,12 +20,6 @@
             this.Assembly = assembly;
             this.Types = types;
 
-            this._controllerTypes = new Dictionary<string, Type>();
-
-            foreach (var type in types)
-            {
-                this.AddControllerType(type);
-            }
             if (DependentAssemblys == null)
             {
                 DependentAssemblys = new List<Assembly>();
@@ -42,7 +30,6 @@
         public PluginDescriptor()
         {
             // TODO: Complete member initialization
-            this._controllerTypes = new Dictionary<string, Type>();
         }
 
         public void Init(IPlugin plugin, IEnumerable<System.Reflection.Assembly> assemblies)
@@ -51,10 +38,6 @@
             this.Assembly = plugin.GetType().Assembly;
             this.Types = plugin.GetType().Assembly.GetTypes();
 
-            foreach (var type in Types)
-            {
-                this.AddControllerType(type);
-            }
             if (DependentAssemblys == null)
             {
                 DependentAssemblys = new List<Assembly>();
@@ -80,33 +63,6 @@
         /// 类型。
         /// </summary>
         public IEnumerable<Type> Types { get; private set; }
-
-        /// <summary>
-        /// 根据控制器类型名称获得控制器类型。
-        /// </summary>
-        /// <param name="coltrollerTypeName">控制器类型名称。</param>
-        /// <returns>控制器类型。</returns>
-        public Type GetControllerType(string coltrollerTypeName)
-        {
-            if (this._controllerTypes.ContainsKey(coltrollerTypeName))
-            {
-                return this._controllerTypes[coltrollerTypeName];
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// 增加控制器类型。
-        /// </summary>
-        /// <param name="type">类型。</param>
-        private void AddControllerType(Type type)
-        {
-            if (type.GetInterface(typeof(IController).Name) != null && type.Name.Contains("Controller") && type.IsClass && !type.IsAbstract)
-            {
-                this._controllerTypes.Add(type.Name, type);
-            }
-        }
 
         /// <summary>
         /// Plugin type
