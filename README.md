@@ -10,5 +10,5 @@ PM> Install-Package PluginMvc.Framework
 
 http://www.nuget.org/packages/PluginMvc.Framework/
 
-mvc5项目请访问：http://www.nuget.org/packages/Plugin
+mvc5项目请访问：https://github.com/shiningrise/Plugin
 
